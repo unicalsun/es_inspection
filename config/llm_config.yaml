@@ -1,0 +1,80 @@
+# ============================================================
+# LLM 配置文件
+# 支持多种 LLM 提供商，通过 provider 字段切换
+# ============================================================
+
+# 当前使用的 LLM 配置
+active_provider: "deepseek"
+
+# 可用的 LLM 提供商配置
+providers:
+  # OpenAI 配置
+  openai:
+    provider: "openai"
+    model: "gpt-4o"
+    api_key: ""          # 支持环境变量引用
+    base_url: null                         # 自定义 API 地址 (留空则用默认)
+    temperature: 0.3
+    max_tokens: 4096
+    timeout: 60
+
+  # DeepSeek 配置
+  deepseek:
+    provider: "deepseek"
+    model: "deepseek-chat"
+    api_key: "sk-xxxxxx"
+    base_url: "https://api.deepseek.com"
+    temperature: 0.3
+    max_tokens: 4096
+    timeout: 60
+
+  # 智谱 AI (ChatGLM) 配置
+  zhipu:
+    provider: "zhipu"
+    model: "glm-4"
+    api_key: ""
+    base_url: "https://open.bigmodel.cn/api/paas/v4"
+    temperature: 0.3
+    max_tokens: 4096
+    timeout: 60
+
+  # 通义千问 (Qwen) 配置
+  qwen:
+    provider: "qwen"
+    model: "qwen-plus"
+    api_key: ""
+    base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    temperature: 0.3
+    max_tokens: 4096
+    timeout: 60
+
+  # Ollama 本地模型配置
+  ollama:
+    provider: "openai"                     # Ollama 兼容 OpenAI 接口
+    model: "qwen2.5:14b"
+    api_key: "ollama"
+    base_url: "http://localhost:11434/v1"
+    temperature: 0.3
+    max_tokens: 4096
+    timeout: 120
+
+  # 自定义 OpenAI 兼容接口
+  custom_openai:
+    provider: "openai"
+    model: "your-model-name"
+    api_key: ""
+    base_url: "https://your-api-endpoint.com/v1"
+    temperature: 0.3
+    max_tokens: 4096
+    timeout: 60
+
+# ==================== 添加新 LLM 示例 ====================
+# providers:
+#   my_new_llm:
+#     provider: "openai"           # OpenAI 兼容接口用 "openai"
+#     model: "model-name"
+#     api_key: "your-key"
+#     base_url: "https://api.example.com/v1"
+#     temperature: 0.3
+#     max_tokens: 4096
+#     timeout: 60

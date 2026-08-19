@@ -1,0 +1,19 @@
+2026-08-19 17:53:17 [INFO] main: 日志文件: C:\oc_workspace\langchain_learning\es_xinjian\logs\inspection_20260819_175317.log
+2026-08-19 17:53:17 [INFO] main: LLM 提供商: 默认 (配置文件中 active_provider)
+2026-08-19 17:53:20 [INFO] main: 执行单集群巡检: standalone
+2026-08-19 17:53:20 [INFO] es_inspector: 单集群巡检: standalone
+2026-08-19 17:53:21 [INFO] elasticsearch: HEAD http://192.168.3.188:9200/ [status:200 request:0.382s]
+2026-08-19 17:53:21 [INFO] es_inspector: [standalone] 连接成功: http://192.168.3.188:9200
+2026-08-19 17:53:21 [INFO] elasticsearch: GET http://192.168.3.188:9200/_cluster/health [status:200 request:0.018s]
+2026-08-19 17:53:21 [INFO] elasticsearch: GET http://192.168.3.188:9200/_cluster/stats [status:200 request:0.056s]
+2026-08-19 17:53:21 [INFO] elasticsearch: GET http://192.168.3.188:9200/_nodes/stats/_all [status:200 request:0.019s]
+2026-08-19 17:53:21 [INFO] elasticsearch: GET http://192.168.3.188:9200/_stats [status:200 request:0.018s]
+2026-08-19 17:53:21 [INFO] elasticsearch: GET http://192.168.3.188:9200/_cat/allocation?format=json [status:200 request:0.007s]
+2026-08-19 17:53:21 [INFO] elasticsearch: GET http://192.168.3.188:9200/_nodes/stats/jvm [status:200 request:0.009s]
+2026-08-19 17:53:21 [INFO] elasticsearch: GET http://192.168.3.188:9200/_nodes/stats/os [status:200 request:0.004s]
+2026-08-19 17:53:21 [INFO] elasticsearch: GET http://192.168.3.188:9200/_nodes/stats/fs [status:200 request:0.005s]
+2026-08-19 17:53:21 [INFO] elasticsearch: GET http://192.168.3.188:9200/_cat/thread_pool?format=json&h=node_name%2Cname%2Cactive%2Cqueue%2Crejected%2Ccompleted [status:200 request:0.007s]
+2026-08-19 17:53:21 [INFO] es_inspector: [standalone] 巡检完成，耗时 0.15s，发现 0 个问题，1 个警告
+2026-08-19 17:53:21 [INFO] es_inspector: 报告已生成: C:\oc_workspace\langchain_learning\es_xinjian\reports\es_inspection_20260819_175321.html
+2026-08-19 17:53:21 [INFO] es_inspector: Markdown 摘要已生成: C:\oc_workspace\langchain_learning\es_xinjian\reports\es_inspection_summary_20260819_175321.md
+2026-08-19 17:53:21 [INFO] es_inspector: 报告已生成: C:\oc_workspace\langchain_learning\es_xinjian\reports\es_inspection_20260819_175321.html

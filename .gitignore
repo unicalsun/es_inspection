@@ -1,0 +1,16 @@
+# 密码配置文件 - 绝对不能提交
+config/db_config.yaml
+
+# 环境变量
+.env
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# IDE
+.vscode/
+.idea/
+*密码*
+.claude

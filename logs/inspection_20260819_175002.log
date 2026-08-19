@@ -1,0 +1,97 @@
+2026-08-19 17:50:02 [INFO] main: 日志文件: C:\oc_workspace\langchain_learning\es_xinjian\logs\inspection_20260819_175002.log
+2026-08-19 17:50:02 [INFO] main: LLM 提供商: 默认 (配置文件中 active_provider)
+2026-08-19 17:50:04 [INFO] langchain_openai.chat_models._client_utils: langchain-openai detected HTTP_PROXY, HTTPS_PROXY, ALL_PROXY, http_proxy, https_proxy, all_proxy and no explicit `http_socket_options` / `http_client` / `http_async_client` / `openai_proxy`; skipping the custom `httpx` transport so httpx's env-proxy auto-detection applies. Pass `http_socket_options=[...]` to opt back into kernel-level TCP keepalive tuning on top of the env proxy.
+2026-08-19 17:50:06 [INFO] main: 执行单集群巡检: standalone
+2026-08-19 17:50:06 [INFO] es_inspector: 单集群巡检: standalone
+2026-08-19 17:50:21 [WARNING] elasticsearch: HEAD http://192.168.3.188:9200/ [status:N/A request:15.015s]
+Traceback (most recent call last):
+  File "C:\Python311\Lib\site-packages\urllib3\connection.py", line 204, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Python311\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Python311\Lib\site-packages\elasticsearch\connection\http_urllib3.py", line 245, in perform_request
+    response = self.pool.urlopen(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\urllib3\connectionpool.py", line 842, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\urllib3\util\retry.py", line 473, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\urllib3\util\util.py", line 39, in reraise
+    raise value
+  File "C:\Python311\Lib\site-packages\urllib3\connectionpool.py", line 788, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+  File "C:\Python311\Lib\site-packages\urllib3\connection.py", line 500, in request
+    self.endheaders()
+  File "C:\Python311\Lib\http\client.py", line 1277, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Python311\Lib\http\client.py", line 1037, in _send_output
+    self.send(msg)
+  File "C:\Python311\Lib\http\client.py", line 975, in send
+    self.connect()
+  File "C:\Python311\Lib\site-packages\urllib3\connection.py", line 331, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise ConnectTimeoutError(
+urllib3.exceptions.ConnectTimeoutError: (<HTTPConnection(host='192.168.3.188', port=9200) at 0x1e9df71b610>, 'Connection to 192.168.3.188 timed out. (connect timeout=15)')
+2026-08-19 17:50:36 [WARNING] elasticsearch: HEAD http://192.168.3.188:9200/ [status:N/A request:15.009s]
+Traceback (most recent call last):
+  File "C:\Python311\Lib\site-packages\urllib3\connection.py", line 204, in _new_conn
+    sock = connection.create_connection(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\urllib3\util\connection.py", line 85, in create_connection
+    raise err
+  File "C:\Python311\Lib\site-packages\urllib3\util\connection.py", line 73, in create_connection
+    sock.connect(sa)
+TimeoutError: timed out
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "C:\Python311\Lib\site-packages\elasticsearch\connection\http_urllib3.py", line 245, in perform_request
+    response = self.pool.urlopen(
+               ^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\urllib3\connectionpool.py", line 842, in urlopen
+    retries = retries.increment(
+              ^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\urllib3\util\retry.py", line 473, in increment
+    raise reraise(type(error), error, _stacktrace)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\urllib3\util\util.py", line 39, in reraise
+    raise value
+  File "C:\Python311\Lib\site-packages\urllib3\connectionpool.py", line 788, in urlopen
+    response = self._make_request(
+               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\urllib3\connectionpool.py", line 493, in _make_request
+    conn.request(
+  File "C:\Python311\Lib\site-packages\urllib3\connection.py", line 500, in request
+    self.endheaders()
+  File "C:\Python311\Lib\http\client.py", line 1277, in endheaders
+    self._send_output(message_body, encode_chunked=encode_chunked)
+  File "C:\Python311\Lib\http\client.py", line 1037, in _send_output
+    self.send(msg)
+  File "C:\Python311\Lib\http\client.py", line 975, in send
+    self.connect()
+  File "C:\Python311\Lib\site-packages\urllib3\connection.py", line 331, in connect
+    self.sock = self._new_conn()
+                ^^^^^^^^^^^^^^^^
+  File "C:\Python311\Lib\site-packages\urllib3\connection.py", line 213, in _new_conn
+    raise ConnectTimeoutError(
+urllib3.exceptions.ConnectTimeoutError: (<HTTPConnection(host='192.168.3.188', port=9200) at 0x1e9df7380d0>, 'Connection to 192.168.3.188 timed out. (connect timeout=15)')
+2026-08-19 17:50:36 [WARNING] es_inspector: [standalone] 集群 standalone 所有节点不可达。最后错误: ping 失败: http://192.168.3.188:9200
+2026-08-19 17:50:36 [INFO] es_inspector: 报告已生成: C:\oc_workspace\langchain_learning\es_xinjian\reports\es_inspection_20260819_175036.html
+2026-08-19 17:50:36 [INFO] es_inspector: Markdown 摘要已生成: C:\oc_workspace\langchain_learning\es_xinjian\reports\es_inspection_summary_20260819_175036.md
+2026-08-19 17:50:36 [INFO] es_inspector: 报告已生成: C:\oc_workspace\langchain_learning\es_xinjian\reports\es_inspection_20260819_175036.html

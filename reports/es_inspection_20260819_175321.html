@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ES 集群巡检报告 - 2026-08-19 17:53:21</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, 'Microsoft YaHei', sans-serif; background: #f0f2f5; color: #333; line-height: 1.6; }
+.header { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: white; padding: 30px 40px; }
+.header h1 { font-size: 24px; margin-bottom: 8px; }
+.header .subtitle { opacity: 0.8; font-size: 14px; }
+.container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+.summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin: 20px 0; }
+.summary-card { background: white; border-radius: 12px; padding: 20px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.summary-card .number { font-size: 36px; font-weight: 700; }
+.summary-card .label { font-size: 13px; color: #666; margin-top: 4px; }
+.section { background: white; border-radius: 12px; margin: 20px 0; box-shadow: 0 2px 8px rgba(0,0,0,0.06); overflow: hidden; }
+.section-title { padding: 16px 24px; font-size: 16px; font-weight: 600; border-bottom: 1px solid #eee; background: #fafbfc; }
+.section-body { padding: 20px 24px; }
+table { width: 100%; border-collapse: collapse; }
+th, td { padding: 10px 14px; text-align: left; border-bottom: 1px solid #f0f0f0; font-size: 13px; }
+th { background: #f8f9fa; font-weight: 600; color: #555; }
+tr:hover { background: #f8f9fa; }
+.badge { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 12px; font-weight: 500; }
+.badge-green { background: #d4edda; color: #155724; }
+.badge-yellow { background: #fff3cd; color: #856404; }
+.badge-red { background: #f8d7da; color: #721c24; }
+.badge-gray { background: #e9ecef; color: #495057; }
+.cluster-card { border: 1px solid #e8e8e8; border-radius: 10px; margin: 16px 0; overflow: hidden; }
+.cluster-header { padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
+.cluster-header:hover { background: #f5f5f5; }
+.cluster-name { font-weight: 600; font-size: 15px; }
+.cluster-body { padding: 0 20px 20px; }
+.metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 12px 0; }
+.metric-item { background: #f8f9fa; border-radius: 8px; padding: 12px; }
+.metric-item .metric-label { font-size: 12px; color: #888; }
+.metric-item .metric-value { font-size: 18px; font-weight: 600; margin-top: 4px; }
+.issue-list { margin: 12px 0; }
+.issue-item { padding: 8px 12px; margin: 4px 0; border-radius: 6px; font-size: 13px; }
+.issue-critical { background: #f8d7da; border-left: 3px solid #dc3545; }
+.issue-warning { background: #fff3cd; border-left: 3px solid #ffc107; }
+.skipped { color: #999; font-style: italic; padding: 16px; }
+.node-table { margin: 12px 0; }
+.collapsible { display: none; }
+.expanded { display: block; }
+.toggle-btn { background: none; border: 1px solid #ddd; border-radius: 4px; padding: 2px 8px; cursor: pointer; font-size: 12px; }
+.footer { text-align: center; padding: 20px; color: #999; font-size: 12px; }
+</style>
+<script>
+function toggleSection(id) {
+    var el = document.getElementById(id);
+    el.classList.toggle('expanded');
+    el.style.display = el.classList.contains('expanded') ? 'block' : 'none';
+}
+</script>
+</head>
+<body>
+
+<div class="header">
+    <h1>🔍 ES 集群巡检报告</h1>
+    <div class="subtitle">巡检时间: 2026-08-19 17:53:21 | 集群总数: 1 | 生成工具: ES Inspector (LangChain Agent)</div>
+</div>
+
+<div class="container">
+    <!-- 概览卡片 -->
+    <div class="summary-grid">
+        <div class="summary-card">
+            <div class="number" style="color: #333">1</div>
+            <div class="label">集群总数</div>
+        </div>
+        <div class="summary-card">
+            <div class="number" style="color: #27ae60">1</div>
+            <div class="label">巡检成功</div>
+        </div>
+        <div class="summary-card">
+            <div class="number" style="color: #27ae60">0</div>
+            <div class="label">巡检失败</div>
+        </div>
+        <div class="summary-card">
+            <div class="number" style="color: #999">0</div>
+            <div class="label">已跳过</div>
+        </div>
+        <div class="summary-card">
+            <div class="number" style="color: #e74c3c">0</div>
+            <div class="label">严重问题</div>
+        </div>
+        <div class="summary-card">
+            <div class="number" style="color: #f39c12">1</div>
+            <div class="label">警告信息</div>
+        </div>
+    </div>
+
+    <div class="cluster-card">
+        <div class="cluster-header" onclick="toggleSection('cluster_0')">
+            <div>
+                <span class="cluster-name">standalone</span>
+                <span class="badge badge-green">正常</span>
+                <span style="margin-left:8px; font-size:12px; color:#999">
+                    标签:  |
+                    节点: 1 |
+                    严重: 0 | 警告: 1
+                </span>
+            </div>
+            <button class="toggle-btn">展开/收起</button>
+        </div>
+        <div class="cluster-body collapsible" id="cluster_0">
+
+            <div class="metric-grid">
+                <div class="metric-item">
+                    <div class="metric-label">集群状态</div>
+                    <div class="metric-value">green</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">节点数</div>
+                    <div class="metric-value">1</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">活跃分片</div>
+                    <div class="metric-value">8</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">文档总数</div>
+                    <div class="metric-value">56</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">存储大小</div>
+                    <div class="metric-value">0.0 GB</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">索引数量</div>
+                    <div class="metric-value">8</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">搜索延迟</div>
+                    <div class="metric-value">6.786 ms</div>
+                </div>
+                <div class="metric-item">
+                    <div class="metric-label">文档删除率</div>
+                    <div class="metric-value">91.07%</div>
+                </div>
+            </div>
+<div class="issue-list"><strong style="color:#f39c12">⚠️ 警告:</strong>
+<div class="issue-item issue-warning">[索引数据] 索引 resumes 删除比例 354.5% 较高</div>
+</div>
+
+            <div class="node-table">
+            <strong>节点详情:</strong>
+            <table>
+            <tr><th>节点名称</th><th>JVM堆使用率</th><th>CPU</th><th>磁盘使用率</th><th>堆内存</th></tr>
+<tr>
+                            <td>node01</td>
+                            <td style="">16%</td>
+                            <td style="">19%</td>
+                            <td style="">N/A%</td>
+                            <td>0.2/1.0 GB</td>
+                        </tr>
+</table></div>
+
+            <details style="margin-top:12px">
+                <summary style="cursor:pointer;color:#666;font-size:13px">📦 查看原始巡检数据 (JSON)</summary>
+                <pre style="background:#f8f9fa;padding:12px;border-radius:6px;font-size:11px;overflow-x:auto;max-height:400px;overflow-y:auto">{
+  "cluster_name": "standalone",
+  "cluster_tags": [],
+  "hosts": [
+    "192.168.3.188"
+  ],
+  "inspection_time": "2026-08-19 17:53:21",
+  "status": "success",
+  "error": null,
+  "cluster_health": {
+    "cluster_name": "demo_es",
+    "status": "green",
+    "timed_out": false,
+    "number_of_nodes": 1,
+    "number_of_data_nodes": 1,
+    "active_primary_shards": 8,
+    "active_shards": 8,
+    "relocating_shards": 0,
+    "initializing_shards": 0,
+    "unassigned_shards": 0,
+    "delayed_unassigned_shards": 0,
+    "number_of_pending_tasks": 0,
+    "number_of_in_flight_fetch": 0,
+    "task_max_waiting_in_queue_millis": 0,
+    "active_shards_percent_as_number": 100.0
+  },
+  "cluster_stats": {
+    "_nodes": {
+      "total": 1,
+      "successful": 1,
+      "failed": 0
+    },
+    "cluster_name": "demo_es",
+    "cluster_uuid": "qiLHQWUiQTuSIXaEmKvwzg",
+    "timestamp": 1787133202351,
+    "status": "green",
+    "indices": {
+      "count": 8,
+      "shards": {
+        "total": 8,
+        "primaries": 8,
+        "replication": 0.0,
+        "index": {
+          "shards": {
+            "min": 1,
+            "max": 1,
+            "avg": 1.0
+          },
+          "primaries": {
+            "min": 1,
+            "max": 1,
+            "avg": 1.0
+          },
+          "replication": {
+            "min": 0.0,
+            "max": 0.0,
+            "avg": 0.0
+          }
+        }
+      },
+      "docs": {
+        "count": 74,
+        "deleted": 51
+      },
+      "store": {
+        "size_in_bytes": 4590805,
+        "reserved_in_bytes": 0
+      },
+      "fielddata": {
+        "memory_size_in_bytes": 616,
+        "evictions": 0
+      },
+      "query_cache": {
+        "memory_size_in_bytes": 0,
+        "total_count": 0,
+        "hit_count": 0,
+        "miss_count": 0,
+        "cache_size": 0,
+        "cache_count": 0,
+        "evictions": 0
+      },
+      "completion": {
+        "size_in_bytes": 0
+      },
+      "segments": {
+        "count": 22,
+        "memory_in_bytes": 60216,
+        "terms_memory_in_bytes": 42176,
+        "stored_fields_memory_in_bytes": 10800,
+        "term_vectors_memory_in_bytes": 0,
+        "norms_memory_in_bytes": 2496,
+        "points_memory_in_bytes": 0,
+        "doc_values_memory_in_bytes": 4744,
+        "index_writer_memory_in_bytes": 0,
+        "version_map_memory_in_bytes": 0,
+        "fixed_bit_set_memory_in_bytes": 864,
+        "max_unsafe_auto_id_timestamp": 1785321471028,
+        "file_sizes": {}
+      },
+      "mappings": {
+        "field_types": [
+          {
+            "name": "binary",
+            "count": 9,
+            "index_count": 1
+          },
+          {
+            "name": "boolean",
+            "count": 32,
+            "index_count": 3
+          },
+          {
+            "name": "date",
+            "count": 72,
+            "index_count": 7
+          },
+          {
+            "name": "flattened",
+            "count": 9,
+            "index_count": 1
+          },
+          {
+            "name": "float",
+            "count": 3,
+            "index_count": 1
+          },
+          {
+            "name": "integer",
+            "count": 28,
+            "index_count": 3
+          },
+          {
+            "name": "keyword",
+            "count": 324,
+            "index_count": 7
+          },
+          {
+            "name": "long",
+            "count": 24,
+            "index_count": 5
+          },
+          {
+            "name": "nested",
+            "count": 8,
+            "index_count": 3
+          },
+          {
+            "name": "object",
+            "count": 149,
+            "index_count": 7
+          },
+          {
+            "name": "text",
+            "count": 155,
+            "index_count": 6
+          }
+        ]
+      },
+      "analysis": {
+        "char_filter_types": [],
+        "tokenizer_types": [],
+        "filter_types": [],
+        "analyzer_types": [
+          {
+            "name": "custom",
+            "count": 1,
+            "index_count": 1
+          }
+        ],
+        "built_in_char_filters": [],
+        "built_in_tokenizers": [
+          {
+            "name": "standard",
+            "count": 1,
+            "index_count": 1
+          }
+        ],
+        "built_in_filters": [
+          {
+            "name": "cjk_bigram",
+            "count": 1,
+            "index_count": 1
+          },
+          {
+            "name": "cjk_width",
+            "count": 1,
+            "index_count": 1
+          },
+          {
+            "name": "lowercase",
+            "count": 1,
+            "index_count": 1
+          }
+        ],
+        "built_in_analyzers": []
+      }
+    },
+    "nodes": {
+      "count": {
+        "total": 1,
+        "coordinating_only": 0,
+        "data": 1,
+        "data_cold": 1,
+        "data_content": 1,
+        "data_hot": 1,
+        "data_warm": 1,
+        "ingest": 1,
+        "master": 1,
+        "ml": 1,
+        "remote_cluster_client": 1,
+        "transform": 1,
+        "voting_only": 0
+      },
+      "versions": [
+        "7.10.2"
+      ],
+      "os": {
+        "available_processors": 4,
+        "allocated_processors": 4,
+        "names": [
+          {
+            "name": "Linux",
+            "count": 1
+          }
+        ],
+        "pretty_names": [
+          {
+            "pretty_name": "CentOS Linux 7 (Core)",
+            "count": 1
+          }
+        ],
+        "mem": {
+          "total_in_bytes": 4099039232,
+          "free_in_bytes": 119693312,
+          "used_in_bytes": 3979345920,
+          "free_percent": 3,
+          "used_percent": 97
+        }
+      },
+      "process": {
+        "cpu": {
+          "percent": 15
+        },
+        "open_file_descriptors": {
+          "min": 347,
+          "max": 347,
+          "avg": 347
+        }
+      },
+      "jvm": {
+        "max_uptime_in_millis": 50125,
+        "versions": [
+          {
+            "version": "15.0.1",
+            "vm_name": "OpenJDK 64-Bit Server VM",
+            "vm_version": "15.0.1+9",
+            "vm_vendor": "AdoptOpenJDK",
+            "bundled_jdk": true,
+            "using_bundled_jdk": true,
+            "count": 1
+          }
+        ],
+        "mem": {
+          "heap_used_in_bytes": 178681856,
+          "heap_max_in_bytes": 1073741824
+        },
+        "threads": 55
+      },
+      "fs": {
+        "total_in_bytes": 27899465728,
+        "free_in_bytes": 8856027136,
+        "available_in_bytes": 8856027136
+      },
+      "plugins": [
+        {
+          "name": "analysis-ik",
+          "version": "7.10.2",
+          "elasticsearch_version": "7.10.2",
+          "java_version": "1.8",
+          "description": "IK Analyzer for Elasticsearch",
+          "classname": "org.elasticsearch.plugin.analysis.ik.AnalysisIkPlugin",
+          "extended_plugins": [],
+          "has_native_controller": false
+        }
+      ],
+      "network_types": {
+        "transport_types": {
+          "security4": 1
+        },
+        "http_types": {
+          "security4": 1
+        }
+      },
+      "discovery_types": {
+        "zen": 1
+      },
+      "packaging_types": [
+        {
+          "flavor": "default",
+          "type": "rpm",
+          "count": 1
+        }
+      ],
+      "ingest": {
+        "number_of_pipelines": 1,
+        "processor_stats": {
+          "gsub": {
+            "count": 0,
+            "failed": 0,
+            "current": 0,
+            "time_in_millis": 0
+          },
+          "script": {
+            "count": 0,
+            "failed": 0,
+            "current": 0,
+            "time_in_millis": 0
+          }
+        }
+      }
+    }
+  },
+  "node_stats": {
+    "_nodes": {
+      "total": 1,
+      "successful": 1,
+      "failed": 0
+    },
+    "cluster_name": "demo_es",
+    "nodes": {
+      "Kc7Q66hdRwWgwBnO3H2QNg": {
+        "timestamp": 1787133202379,
+        "name": "node01",
+        "transport_address": "192.168.3.188:9300",
+        "host": "192.168.3.188",
+        "ip": "192.168.3.188:9300",
+        "roles": [
+          "data",
+          "data_cold",
+          "data_content",
+          "data_hot",
+          "data_warm",</pre>
+            </details>
+
+        </div>
+    </div>
+
+    <div class="footer">
+        ES 集群巡检报告 | 由 LangChain ES Inspector 自动生成 | 2026-08-19 17:53:21
+    </div>
+</div>
+</body>
+</html>

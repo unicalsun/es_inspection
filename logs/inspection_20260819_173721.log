@@ -1,0 +1,15 @@
+2026-08-19 17:37:21 [INFO] main: 日志文件: C:\oc_workspace\langchain_learning\es_xinjian\logs\inspection_20260819_173721.log
+2026-08-19 17:37:21 [INFO] main: LLM 提供商: 默认 (配置文件中 active_provider)
+2026-08-19 17:37:24 [INFO] main: 执行单集群巡检: standalone
+2026-08-19 17:37:24 [INFO] elasticsearch: HEAD http://192.168.3.188:9200/ [status:200 request:0.021s]
+2026-08-19 17:37:24 [INFO] es_inspector: [standalone] 连接成功: http://192.168.3.188:9200
+2026-08-19 17:37:24 [INFO] elasticsearch: GET http://192.168.3.188:9200/_cluster/health [status:200 request:0.130s]
+2026-08-19 17:37:25 [INFO] elasticsearch: GET http://192.168.3.188:9200/_cluster/stats [status:200 request:0.140s]
+2026-08-19 17:37:25 [INFO] elasticsearch: GET http://192.168.3.188:9200/_nodes/stats/_all [status:200 request:0.018s]
+2026-08-19 17:37:25 [INFO] elasticsearch: GET http://192.168.3.188:9200/_stats [status:200 request:0.017s]
+2026-08-19 17:37:31 [ERROR] es_inspector: [standalone] API _cat/allocation?v 最终失败: 'Elasticsearch' object has no attribute 'perform_request'
+2026-08-19 17:37:31 [INFO] elasticsearch: GET http://192.168.3.188:9200/_nodes/stats/jvm [status:200 request:0.005s]
+2026-08-19 17:37:31 [INFO] elasticsearch: GET http://192.168.3.188:9200/_nodes/stats/os [status:200 request:0.007s]
+2026-08-19 17:37:31 [INFO] elasticsearch: GET http://192.168.3.188:9200/_nodes/stats/fs [status:200 request:0.003s]
+2026-08-19 17:37:37 [ERROR] es_inspector: [standalone] API _cat/thread_pool?v 最终失败: 'Elasticsearch' object has no attribute 'perform_request'
+2026-08-19 17:37:37 [INFO] es_inspector: [standalone] 巡检完成，耗时 12.33s，发现 0 个问题，2 个警告

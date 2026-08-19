@@ -1,0 +1,238 @@
+# ============================================================
+# ES 巡检指标配置
+# 定义巡检采集的指标和阈值
+# ============================================================
+
+# ==================== 集群级指标 ====================
+cluster_metrics:
+  # --- 基础健康 ---
+  - name: "cluster_health"
+    description: "集群健康状态 (green/yellow/red)"
+    api: "_cluster/health"
+    critical_fields: ["status"]
+    thresholds:
+      red: "critical"
+      yellow: "warning"
+
+  - name: "cluster_stats"
+    description: "集群统计概览"
+    api: "_cluster/stats"
+    key_metrics:
+      - "nodes.total"
+      - "nodes.master"
+      - "nodes.data"
+      - "indices.count"
+      - "indices.docs.count"
+      - "indices.store.size_in_bytes"
+      - "nodes.jvm.max_heap_in_bytes"
+      - "nodes.os.available_processors"
+
+  - name: "cluster_settings"
+    description: "集群配置检查"
+    api: "_cluster/settings"
+    check_items:
+      - "cluster.max_shards_per_node"
+      - "cluster.routing.allocation.enable"
+
+  # --- 分片相关 ---
+  - name: "shard_allocation"
+    description: "分片分配状态"
+    api: "_cat/allocation?v"
+    warn_thresholds:
+      disk_usage_percent: 80
+      disk_usage_critical: 90
+
+  - name: "unassigned_shards"
+    description: "未分配分片检查"
+    api: "_cluster/health"
+    critical_fields: ["unassigned_shards", "relocating_shards", "initializing_shards"]
+    thresholds:
+      unassigned_shards: 0
+      relocating_shards: 5
+      initializing_shards: 5
+
+  # --- 节点负载 ---
+  - name: "node_stats"
+    description: "节点负载统计"
+    api: "_nodes/stats"
+    key_metrics:
+      - "jvm.mem.heap_used_percent"
+      - "os.cpu.percent"
+      - "fs.total.used_percent"
+      - "thread_pool.search.rejected"
+      - "thread_pool.write.rejected"
+      - "transport.rx_size_in_bytes"
+      - "transport.tx_size_in_bytes"
+    thresholds:
+      jvm_heap_percent: 75
+      os_cpu_percent: 80
+      disk_usage_percent: 80
+      thread_pool_rejected: 0
+
+  # --- 索引相关 ---
+  - name: "indices_stats"
+    description: "索引级统计"
+    api: "_stats"
+    key_metrics:
+      - "indices.total.docs.count"
+      - "indices.total.docs.deleted"
+      - "indices.total.store.size_in_bytes"
+      - "indices.total.search.query_total"
+      - "indices.total.search.query_time_in_millis"
+      - "indices.total.indexing.index_total"
+      - "indices.total.indexing.index_time_in_millis"
+
+  - name: "index_list"
+    description: "索引列表与状态"
+    api: "_cat/indices?v&s=index"
+    check_items:
+      - "health"
+      - "status"
+      - "docs.count"
+      - "store.size"
+
+  # --- 任务与线程池 ---
+  - name: "pending_tasks"
+    description: "待处理任务"
+    api: "_cluster/pending_tasks"
+    warn_if: "tasks.length > 0"
+
+  - name: "thread_pool_stats"
+    description: "线程池状态"
+    api: "_cat/thread_pool?v&h=node_name,name,active,queue,rejected,completed"
+    warn_thresholds:
+      rejected: 0
+
+# ==================== 百胜中国业务层指标 ====================
+yumchina_business_metrics:
+  # --- 订单搜索性能 ---
+  - name: "order_search_latency"
+    description: "订单搜索延迟 (涉及门店订单查询场景)"
+    api: "_stats/search"
+    calc: "query_time_in_millis / max(query_total, 1)"
+    unit: "ms"
+    thresholds:
+      warning: 50
+      critical: 200
+
+  # --- 菜品/菜单索引健康 ---
+  - name: "menu_index_health"
+    description: "菜品菜单索引健康 (产品搜索/推荐)"
+    api: "_cat/indices?v"
+    filter_pattern: "menu*,product*,item*"
+    check: "health == green"
+
+  # --- 门店搜索 ---
+  - name: "store_search_latency"
+    description: "门店搜索延迟 (附近门店/门店列表)"
+    api: "_stats/search"
+    calc: "query_time_in_millis / max(query_total, 1)"
+    unit: "ms"
+    thresholds:
+      warning: 30
+      critical: 100
+
+  # --- 优惠券/活动索引 ---
+  - name: "promotion_index_health"
+    description: "优惠券/活动索引健康"
+    api: "_cat/indices?v"
+    filter_pattern: "coupon*,promotion*,campaign*"
+    check: "health == green"
+
+  # --- 文档删除率 (数据生命周期) ---
+  - name: "doc_deletion_ratio"
+    description: "文档删除比例 (数据清理健康度)"
+    api: "_stats"
+    calc: "deleted / max(count, 1) * 100"
+    unit: "%"
+    thresholds:
+      warning: 20
+      critical: 50
+
+  # --- 索引写入速度 ---
+  - name: "indexing_rate"
+    description: "索引写入速率 (业务写入压力)"
+    api: "_stats"
+    calc: "index_total / max(index_time_in_millis, 1) * 1000"
+    unit: "docs/s"
+    info_only: true
+
+# ==================== 系统层指标 (通过 ES nodes/stats 获取) ====================
+system_metrics:
+  - name: "jvm_heap_usage"
+    description: "JVM 堆内存使用率"
+    api: "_nodes/stats/jvm"
+    extract: "jvm.mem.heap_used_percent"
+    thresholds:
+      warning: 70
+      critical: 85
+
+  - name: "jvm_gc_pause"
+    description: "JVM GC 暂停时间"
+    api: "_nodes/stats/jvm"
+    extract: "jvm.gc.collectors.old_collection_time_in_millis"
+    thresholds:
+      warning_ms_per_hour: 10000
+      critical_ms_per_hour: 30000
+
+  - name: "os_cpu_usage"
+    description: "操作系统 CPU 使用率"
+    api: "_nodes/stats/os"
+    extract: "os.cpu.percent"
+    thresholds:
+      warning: 70
+      critical: 90
+
+  - name: "disk_usage"
+    description: "磁盘使用率"
+    api: "_nodes/stats/fs"
+    extract: "fs.total.used_percent"
+    thresholds:
+      warning: 75
+      critical: 85
+
+  - name: "memory_usage"
+    description: "系统内存使用率"
+    api: "_nodes/stats/os"
+    calc: "(1 - os.mem.free_in_bytes / os.mem.total_in_bytes) * 100"
+    thresholds:
+      warning: 80
+      critical: 95
+
+  - name: "network_io"
+    description: "网络 I/O 统计"
+    api: "_nodes/stats/transport"
+    extract: ["transport.rx_size_in_bytes", "transport.tx_size_in_bytes"]
+    info_only: true
+
+  - name: "thread_pool_health"
+    description: "线程池健康状态"
+    api: "_nodes/stats/thread_pool"
+    check_rejected: true
+    thresholds:
+      rejected_count_warning: 10
+      rejected_count_critical: 100
+
+  - name: "segment_count"
+    description: "Lucene Segment 数量"
+    api: "_nodes/stats/indices"
+    extract: "indices.segments.count"
+    thresholds:
+      warning_per_shard: 5
+      critical_per_shard: 10
+
+# ==================== 巡检报告配置 ====================
+report:
+  output_dir: "reports"
+  filename_format: "es_inspection_{timestamp}.html"
+  include_raw_data: true
+  include_recommendations: true
+  language: "zh-CN"
+
+# ==================== 巡检超时配置 ====================
+inspection:
+  timeout_per_cluster: 60           # 单个集群巡检超时 (秒)
+  timeout_per_api: 15               # 单个 API 调用超时 (秒)
+  retry_count: 2                    # 失败重试次数
+  retry_delay: 3                    # 重试间隔 (秒)
+  parallel_clusters: 3              # 并行巡检集群数
