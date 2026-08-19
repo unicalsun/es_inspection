@@ -95,7 +95,7 @@ eports/ 目录：
 
 ## 项目结构
 
-`
+```
 es_xinjian/
 ├── config/
 │   ├── clusters.yaml          # 集群配置 (可追加)
@@ -110,7 +110,7 @@ es_xinjian/
 ├── reports/                   # 报告目录
 ├── main.py                    # 入口
 └── requirements.txt
-`
+```
 
 ## ES 账号
 
