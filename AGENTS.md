@@ -18,7 +18,7 @@
 
 ## 项目结构
 
-`
+```
 es_xinjian/
 ├── config/
 │   ├── clusters.yaml          # ES 集群配置 (可追加新集群)
@@ -36,7 +36,7 @@ es_xinjian/
 ├── main.py                    # CLI 主入口
 ├── requirements.txt           # 依赖清单
 └── README.md                  # 项目说明
-`
+```
 
 ## 核心模块说明
 
@@ -63,8 +63,10 @@ es_xinjian/
 ### agent.py - LangChain 智能体
 - ESInspectionAgent: 核心智能体类
 - 4个 LangChain Tool: list_clusters / inspect_cluster / get_cluster_health / analyze_issues
-- un_full_inspection(): 全量巡检流程 (连接->巡检->LLM分析->报告)
-- un_cluster_inspection(): 单集群巡检
+- 
+un_full_inspection(): 全量巡检流程 (连接->巡检->LLM分析->报告)
+- 
+un_cluster_inspection(): 单集群巡检
 - LLM 分析: 将巡检数据发送给 LLM，生成整体评估+风险点+业务优化建议
 
 ### report_generator.py - 报告生成
@@ -76,7 +78,7 @@ es_xinjian/
 ## 配置文件
 
 ### config/clusters.yaml - 集群配置
-`yaml
+```
 clusters:
   - name: "cluster-01-3node"
     hosts: ["192.168.1.101", "192.168.1.102", "192.168.1.103"]
@@ -87,12 +89,12 @@ clusters:
       password: "Yumchina1234"
     enabled: true
     tags: ["3node", "生产环境"]
-`
+```
 - 追加新集群: 在列表末尾添加，或使用 python main.py add-cluster
 - 已配置 15 套集群 (10套3节点 + 5套10节点)
 
 ### config/llm_config.yaml - LLM 配置
-`yaml
+```
 active_provider: "deepseek"
 providers:
   openai: { provider: "openai", model: "gpt-4o", api_key: "" }
@@ -101,7 +103,7 @@ providers:
   qwen: { provider: "qwen", model: "qwen-plus", ... }
   ollama: { provider: "openai", model: "qwen2.5:14b", base_url: "http://localhost:11434/v1" }
   custom_openai: { ... }
-`
+```
 - 切换 LLM: 修改 ctive_provider 或运行时 --llm 参数
 - 添加新 LLM: 在 providers 下新增 openai 兼容配置
 
@@ -109,12 +111,13 @@ providers:
 - cluster_metrics: 集群层指标 (health/stats/shards/settings)
 - yumchina_business_metrics: 百胜业务指标 (搜索延迟/菜单索引/优惠活动等)
 - system_metrics: 系统层指标 (JVM/CPU/磁盘/内存/线程池/Segment)
-- eport: 报告输出配置
+- 
+eport: 报告输出配置
 - inspection: 超时/重试/并行度配置
 
 ## CLI 命令
 
-`ash
+```
 # 全量巡检
 python main.py inspect
 
@@ -132,7 +135,7 @@ python main.py list-llm
 
 # 添加新集群
 python main.py add-cluster --name cluster-16 --hosts "10.0.0.1,10.0.0.2" --port 9200
-`
+```
 
 ## 巡检阈值
 
@@ -170,7 +173,8 @@ python main.py add-cluster --name cluster-16 --hosts "10.0.0.1,10.0.0.2" --port 
 - 调整超时和重试参数
 
 ### 查看报告
-报告输出在 eports/ 目录:
+报告输出在 
+eports/ 目录:
 - HTML: 浏览器打开，包含交互式展开/收起
 - Markdown: 文本摘要
 - 日志: logs/inspection_{timestamp}.log
@@ -179,5 +183,6 @@ python main.py add-cluster --name cluster-16 --hosts "10.0.0.1,10.0.0.2" --port 
 
 1. **新增巡检指标**: 在 inspection_config.yaml 添加指标定义，在 inspector.py 的 inspect_cluster() 中添加采集逻辑
 2. **新增 LLM 提供商**: 在 llm_config.yaml providers 下添加配置，llm_factory.py 的 create_llm() 中添加对应 case
-3. **修改报告格式**: 编辑 eport_generator.py 的 _build_html() 方法
+3. **修改报告格式**: 编辑 
+eport_generator.py 的 _build_html() 方法
 4. **调整告警阈值**: 编辑 inspection_config.yaml 中的 thresholds 字段

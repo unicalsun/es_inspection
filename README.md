@@ -4,13 +4,13 @@
 
 ## 安装依赖
 
-`ash
+`bash
 pip install -r requirements.txt
 `
 
 ## 快速开始
 
-`ash
+```bash
 # 全量巡检 (所有集群)
 python main.py inspect
 
@@ -25,13 +25,13 @@ python main.py test-connection
 
 # 查看可用 LLM
 python main.py list-llm
-`
+```
 
 ## 添加新集群
 
 编辑 config/clusters.yaml，在 clusters: 下追加：
 
-`yaml
+```yaml
   - name: "my-cluster"
     hosts: ["192.168.1.101", "192.168.1.102"]
     port: 9200
@@ -39,13 +39,13 @@ python main.py list-llm
     auth: {username: "db_ops", password: "xxxx"}
     enabled: true
     tags: ["3node", "生产环境"]
-`
+```
 
 或用命令行添加：
 
-`ash
+```bash
 python main.py add-cluster --name my-cluster --hosts "192.168.1.101,192.168.1.102" --port 9200
-`
+```
 
 ## 配置 LLM
 
@@ -67,14 +67,14 @@ active_provider: "deepseek"    # 修改这里切换 LLM
 
 添加任意 OpenAI 兼容接口：
 
-`yaml
+```yaml
 providers:
   my_llm:
     provider: "openai"
     model: "model-name"
     api_key: "your-key"
     base_url: "https://api.example.com/v1"
-`
+```
 
 然后设置 ctive_provider: "my_llm"。
 
